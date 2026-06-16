@@ -2,35 +2,34 @@
 第08课：拦截器 —— 服务端（日志 + 认证）
 运行: python grpc_server.py
 """
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import grpc
 import time
 from concurrent import futures
 import user_pb2, user_pb2_grpc
 
-# ===== 拦截器1：日志 =====
+# ===== 拦截器1：日志（记录每个请求的方法名和耗时）=====
 class LogInterceptor(grpc.ServerInterceptor):
     def intercept_service(self, cont, details):
         method = details.method
-        print(f"[{time.strftime('%H:%M:%S')}] → {method}")
+        print(f"[{time.strftime('%H:%M:%S')}] -> {method}")
         start = time.time()
         resp = cont(details)
-        print(f"[{time.strftime('%H:%M:%S')}] ← {method} ({time.time()-start:.3f}s)")
+        print(f"[{time.strftime('%H:%M:%S')}] <- {method} ({time.time()-start:.3f}s)")
         return resp
 
-# ===== 拦截器2：认证 =====
+# ===== 拦截器2：认证（检查 authorization metadata）=====
 class AuthInterceptor(grpc.ServerInterceptor):
     def intercept_service(self, cont, details):
         md = dict(details.invocation_metadata)
         if md.get('authorization') != 'Bearer my-token':
+            # 认证失败：返回 UNAUTHENTICATED
             def deny(req, ctx):
                 ctx.abort(grpc.StatusCode.UNAUTHENTICATED, "Token 无效")
             return grpc.unary_unary_rpc_method_handler(deny)
+        # 认证通过：继续调用链
         return cont(details)
 
-# ===== 服务实现（同上）=====
+# ===== 服务实现 =====
 class UserService(user_pb2_grpc.UserServiceServicer):
     def __init__(self):
         self.db = {}
@@ -73,6 +72,7 @@ class UserService(user_pb2_grpc.UserServiceServicer):
                 timestamp=time.strftime("%H:%M:%S")
             )
 
+# ===== 启动（注册多个拦截器，按列表顺序执行——洋葱模型）=====
 def serve():
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10),
@@ -81,7 +81,7 @@ def serve():
     user_pb2_grpc.add_UserServiceServicer_to_server(UserService(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
-    print("🚀 gRPC 服务（日志 + 认证拦截器）: [::]:50051")
+    print("[gRPC] 服务已启动（日志 + 认证拦截器）: [::]:50051")
     server.wait_for_termination()
 
 if __name__ == '__main__':
