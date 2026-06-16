@@ -22,9 +22,9 @@ fastapi_project/
 ```
 
 proto 文件也应该这样组织！把所有定义塞进一个 `all.proto` 会：
-- ❌ 文件太长，难以维护
-- ❌ 不同服务的 message 容易命名冲突
-- ❌ 无法按模块复用
+- [ERR] 文件太长，难以维护
+- [ERR] 不同服务的 message 容易命名冲突
+- [ERR] 无法按模块复用
 
 ---
 
@@ -194,7 +194,7 @@ python -m grpc_tools.protoc \
   protos/user/*.proto \
   protos/order/*.proto
 
-echo "✅ 代码生成完成"
+echo "[OK] 代码生成完成"
 ```
 
 Windows 上也可以用 Python 脚本 `generate.py`：
@@ -214,7 +214,7 @@ cmd = [
 ] + proto_files
 
 subprocess.run(cmd, check=True)
-print(f"✅ 代码生成完成，共处理 {len(proto_files)} 个 proto 文件")
+print(f"[OK] 代码生成完成，共处理 {len(proto_files)} 个 proto 文件")
 ```
 
 ---
@@ -279,7 +279,7 @@ order_pb2_grpc.add_OrderServiceServicer_to_server(
 # ===== 启动 =====
 server.add_insecure_port('[::]:50051')
 server.start()
-print("🚀 服务器已启动，托管了 UserService 和 OrderService")
+print("[gRPC] 服务器已启动，托管了 UserService 和 OrderService")
 server.wait_for_termination()
 ```
 
@@ -289,13 +289,13 @@ server.wait_for_termination()
 
 | 实践 | 说明 |
 |------|------|
-| ✅ 共享类型放 `common.proto` | Address、Timestamp、Status 等 |
-| ✅ 一个 `service` 一个 proto 文件 | 用户服务 = `user.proto`，订单 = `order.proto` |
-| ✅ 使用 `package` 避免冲突 | `package user;` 和 `package order;` |
-| ✅ proto 目录结构和包名对应 | `protos/user/user.proto` ↔ `package user;` |
-| ✅ 写生成脚本自动化 | 一键编译所有 proto |
-| ❌ 不要把生成代码提交到 git | `*_pb2.py` 和 `*_pb2_grpc.py` 应 `.gitignore` |
-| ❌ 不要在 message 间循环引用 | proto 不支持嵌套 import 循环 |
+| [OK] 共享类型放 `common.proto` | Address、Timestamp、Status 等 |
+| [OK] 一个 `service` 一个 proto 文件 | 用户服务 = `user.proto`，订单 = `order.proto` |
+| [OK] 使用 `package` 避免冲突 | `package user;` 和 `package order;` |
+| [OK] proto 目录结构和包名对应 | `protos/user/user.proto` ↔ `package user;` |
+| [OK] 写生成脚本自动化 | 一键编译所有 proto |
+| [ERR] 不要把生成代码提交到 git | `*_pb2.py` 和 `*_pb2_grpc.py` 应 `.gitignore` |
+| [ERR] 不要在 message 间循环引用 | proto 不支持嵌套 import 循环 |
 
 ---
 
@@ -328,7 +328,7 @@ server.wait_for_termination()
 
 ---
 
-## 📝 课后练习
+## [TEST] 课后练习
 
 1. 把之前的 `user.proto` 拆分成 `common/common.proto` 和 `user/user.proto`
 2. 新增一个 `order.proto`，在 OrderResponse 中引用 `common.Address`

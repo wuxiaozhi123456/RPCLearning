@@ -59,16 +59,16 @@ with httpx.Client(base_url=BASE_URL, timeout=2.0) as client:
     # 创建用户
     resp = client.post("/users", json={"name": "Alice", "email": "alice@example.com"})
     user = resp.json()
-    print(f"✅ Created: {user['id']} - {user['name']} ({user['email']})")
+    print(f"[OK] Created: {user['id']} - {user['name']} ({user['email']})")
 
     # 获取用户
     resp = client.get("/users/1")
     user = resp.json()
-    print(f"✅ Got: {user['id']} - {user['name']} ({user['email']})")
+    print(f"[OK] Got: {user['id']} - {user['name']} ({user['email']})")
 
     # 查不存在用户
     resp = client.get("/users/999")
-    print(f"❌ Error: {resp.status_code} - {resp.text}")
+    print(f"[ERR] Error: {resp.status_code} - {resp.text}")
 ```
 
 ---
@@ -120,7 +120,7 @@ resp = stub.CreateUser(user_pb2.CreateUserRequest(name="Alice", email="..."))
 | 6 | **寻址方式** | 每次请求带完整 URL | Channel 创建时指定一次 |
 | 7 | **类型安全** | 运行时 Pydantic 校验 | 编译时强类型保证 |
 | 8 | **错误处理** | HTTP 状态码（200/404/500） + JSON | gRPC StatusCode + `RpcError` |
-| 9 | **流式传输** | 需 WebSocket / SSE | ✅ 原生支持三种流式 |
+| 9 | **流式传输** | 需 WebSocket / SSE | [OK] 原生支持三种流式 |
 | 10 | **跨语言** | 手动写各语言客户端 | proto 编译一次，生成多语言代码 |
 
 ---
@@ -134,7 +134,7 @@ resp = stub.CreateUser(user_pb2.CreateUserRequest(name="Alice", email="..."))
 | 请求构造 | `json={"name":"Alice","email":"..."}` | `CreateUserRequest(name="Alice", email="...")` |
 | 发起调用 | `client.post("/users", json=data)` | `stub.CreateUser(request)` |
 | 响应解析 | `resp.json()["id"]` | `response.id`（属性访问） |
-| 类型提示 | 无（dict） | ✅ IDE 自动补全 |
+| 类型提示 | 无（dict） | [OK] IDE 自动补全 |
 
 ### 4.2 获取用户
 
@@ -171,18 +171,18 @@ except grpc.RpcError as e:
 
 ### FastAPI 的优势
 
-- ✅ 浏览器直接可访问（`http://localhost:8000/docs` 有 Swagger UI）
-- ✅ 用 curl / Postman 就能调试
-- ✅ JSON 可读，出问题时一眼能看懂
-- ✅ 学习曲线低，就是写 HTTP
+- [OK] 浏览器直接可访问（`http://localhost:8000/docs` 有 Swagger UI）
+- [OK] 用 curl / Postman 就能调试
+- [OK] JSON 可读，出问题时一眼能看懂
+- [OK] 学习曲线低，就是写 HTTP
 
 ### gRPC 的优势
 
-- ✅ 强类型，IDE 自动补全，不会写错字段名
-- ✅ 性能更高（Protobuf 二进制 + HTTP/2 多路复用）
-- ✅ 原生流式传输（服务端推送、双向通信）
-- ✅ 一份 proto 生成所有语言客户端（多语言微服务团队友好）
-- ✅ 调用体验像本地函数，代码更简洁
+- [OK] 强类型，IDE 自动补全，不会写错字段名
+- [OK] 性能更高（Protobuf 二进制 + HTTP/2 多路复用）
+- [OK] 原生流式传输（服务端推送、双向通信）
+- [OK] 一份 proto 生成所有语言客户端（多语言微服务团队友好）
+- [OK] 调用体验像本地函数，代码更简洁
 
 ---
 
@@ -225,7 +225,7 @@ except grpc.RpcError as e:
 
 ---
 
-## 📝 课后练习
+## [TEST] 课后练习
 
 1. 把上面 FastAPI 和 gRPC 的客户端+服务端都跑一遍
 2. 尝试在两个服务端代码里加入打印日志，对比请求到达时分别打印了什么

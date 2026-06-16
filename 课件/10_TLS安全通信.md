@@ -72,7 +72,7 @@ def serve():
     server.add_secure_port('[::]:50051', credentials)
 
     server.start()
-    print("🔒 gRPC 服务已启动（TLS 加密）: [::]:50051")
+    print("[TLS] gRPC 服务已启动（TLS 加密）: [::]:50051")
     server.wait_for_termination()
 
 if __name__ == '__main__':
@@ -104,7 +104,7 @@ channel = grpc.secure_channel('localhost:50051', credentials)
 # 之后的使用方式和 insecure 完全一样！
 stub = user_pb2_grpc.UserServiceStub(channel)
 resp = stub.GetUser(user_pb2.GetUserRequest(id=1))
-print(f"✅ {resp.name}")
+print(f"[OK] {resp.name}")
 ```
 
 ### 方式 2：本地开发跳过验证（不推荐生产用！）
@@ -130,8 +130,8 @@ channel = grpc.secure_channel(
 | 服务端凭证 | 无 | `ssl_server_credentials()` |
 | 客户端通道 | `insecure_channel(...)` | `secure_channel(..., creds)` |
 | 客户端凭证 | 无 | `ssl_channel_credentials(root_certs=...)` |
-| 数据加密 | ❌ 明文 | ✅ 加密 |
-| 身份验证 | ❌ 无 | ✅ 证书验证 |
+| 数据加密 | [ERR] 明文 | [OK] 加密 |
+| 身份验证 | [ERR] 无 | [OK] 证书验证 |
 
 ---
 
@@ -200,7 +200,7 @@ server.key
 
 ---
 
-## 📝 课后练习
+## [TEST] 课后练习
 
 1. 用 openssl 生成自签名证书
 2. 把之前写的服务端和客户端都改成 TLS 版本，确保能正常通信

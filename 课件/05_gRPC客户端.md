@@ -63,16 +63,16 @@ import user_pb2_grpc
 
 def run():
     # ===== 1. 建立连接 =====
-    print("📡 正在连接 gRPC 服务器...")
+    print("[CONN] 正在连接 gRPC 服务器...")
     channel = grpc.insecure_channel('localhost:50051')
 
     # ===== 2. 创建 Stub（客户端代理）=====
     stub = user_pb2_grpc.UserServiceStub(channel)
-    print("✅ 连接成功！\n")
+    print("[OK] 连接成功！\n")
 
     # ===== 3. 调用 CreateUser =====
     print("=" * 40)
-    print("📝 测试 1: 创建用户 Alice")
+    print("[TEST] 测试 1: 创建用户 Alice")
     print("=" * 40)
 
     try:
@@ -83,15 +83,15 @@ def run():
             ),
             timeout=2.0                    # ← 超时设置
         )
-        print(f"✅ 创建成功!")
+        print(f"[OK] 创建成功!")
         print(f"   ID:    {response.id}")
         print(f"   Name:  {response.name}")
         print(f"   Email: {response.email}")
     except grpc.RpcError as e:
-        print(f"❌ 创建失败: {e.code()} - {e.details()}")
+        print(f"[ERR] 创建失败: {e.code()} - {e.details()}")
 
     # ===== 4. 再创建几个用户 =====
-    print("\n📝 批量创建用户...")
+    print("\n[TEST] 批量创建用户...")
     users_data = [
         ("Bob",   "bob@example.com"),
         ("Charlie", "charlie@example.com"),
@@ -102,13 +102,13 @@ def run():
                 user_pb2.CreateUserRequest(name=name, email=email),
                 timeout=2.0
             )
-            print(f"   ✅ {resp.name} (ID={resp.id})")
+            print(f"   [OK] {resp.name} (ID={resp.id})")
         except grpc.RpcError as e:
-            print(f"   ❌ {name}: {e.details()}")
+            print(f"   [ERR] {name}: {e.details()}")
 
     # ===== 5. 调用 GetUser =====
     print("\n" + "=" * 40)
-    print("📝 测试 2: 查询用户")
+    print("[TEST] 测试 2: 查询用户")
     print("=" * 40)
 
     for user_id in [1, 2, 3, 999]:
@@ -117,13 +117,13 @@ def run():
                 user_pb2.GetUserRequest(id=user_id),
                 timeout=2.0
             )
-            print(f"   ✅ 用户 {user_id}: {resp.name} ({resp.email})")
+            print(f"   [OK] 用户 {user_id}: {resp.name} ({resp.email})")
         except grpc.RpcError as e:
-            print(f"   ❌ 用户 {user_id}: {e.code().name} - {e.details()}")
+            print(f"   [ERR] 用户 {user_id}: {e.code().name} - {e.details()}")
 
     # ===== 6. 关闭连接 =====
     channel.close()
-    print("\n👋 连接已关闭")
+    print("\n--- 连接已关闭")
 
 if __name__ == '__main__':
     run()
@@ -140,30 +140,30 @@ python grpc_client.py
 ### 预期输出
 
 ```
-📡 正在连接 gRPC 服务器...
-✅ 连接成功！
+[CONN] 正在连接 gRPC 服务器...
+[OK] 连接成功！
 
 ========================================
-📝 测试 1: 创建用户 Alice
+[TEST] 测试 1: 创建用户 Alice
 ========================================
-✅ 创建成功!
+[OK] 创建成功!
    ID:    1
    Name:  Alice
    Email: alice@example.com
 
-📝 批量创建用户...
-   ✅ Bob (ID=2)
-   ✅ Charlie (ID=3)
+[TEST] 批量创建用户...
+   [OK] Bob (ID=2)
+   [OK] Charlie (ID=3)
 
 ========================================
-📝 测试 2: 查询用户
+[TEST] 测试 2: 查询用户
 ========================================
-   ✅ 用户 1: Alice (alice@example.com)
-   ✅ 用户 2: Bob (bob@example.com)
-   ✅ 用户 3: Charlie (charlie@example.com)
-   ❌ 用户 999: NOT_FOUND - 用户 999 不存在
+   [OK] 用户 1: Alice (alice@example.com)
+   [OK] 用户 2: Bob (bob@example.com)
+   [OK] 用户 3: Charlie (charlie@example.com)
+   [ERR] 用户 999: NOT_FOUND - 用户 999 不存在
 
-👋 连接已关闭
+--- 连接已关闭
 ```
 
 ---
@@ -237,7 +237,7 @@ gRPC 客户端的 3 个核心对象：
 
 ---
 
-## 📝 课后小测
+## [TEST] 课后小测
 
 1. 客户端需要哪三个核心对象？
 2. 为什么 gRPC 客户端方法调用时不需要写 URL 路径？
