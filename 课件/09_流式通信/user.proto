@@ -1,0 +1,37 @@
+syntax = "proto3";
+package user;
+
+service UserService {
+    rpc CreateUser (CreateUserRequest) returns (UserResponse);
+    rpc GetUser (GetUserRequest) returns (UserResponse);
+    rpc ListUsers (ListUsersRequest) returns (stream UserResponse);
+    rpc BatchCreateUsers (stream CreateUserRequest) returns (BatchCreateResponse);
+    rpc Chat (stream ChatMessage) returns (stream ChatMessage);
+}
+
+message CreateUserRequest {
+    string name = 1;
+    string email = 2;
+}
+message GetUserRequest {
+    int32 id = 1;
+}
+message UserResponse {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+}
+message ListUsersRequest {
+    int32 page_size = 1;
+}
+message BatchCreateResponse {
+    int32 success_count = 1;
+    int32 fail_count = 2;
+    repeated int32 created_ids = 3;
+    repeated string errors = 4;
+}
+message ChatMessage {
+    string user = 1;
+    string text = 2;
+    string timestamp = 3;
+}
