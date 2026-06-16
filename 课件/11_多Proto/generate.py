@@ -15,4 +15,4 @@ cmd = [
 ] + proto_files
 
 subprocess.run(cmd, check=True)
-print(f"✅ 已生成 {len(proto_files)} 个 proto 的代码")
+print(f"[OK] 已生成 {len(proto_files)} 个 proto 的代码")
