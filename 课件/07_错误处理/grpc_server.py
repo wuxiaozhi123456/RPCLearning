@@ -1,10 +1,8 @@
 """
 第07课：错误处理 —— 改造后的服务端
+演示两种方式: abort() 和 set_code()
 运行: python grpc_server.py
 """
-import sys, os
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import grpc
 from concurrent import futures
 import user_pb2, user_pb2_grpc
@@ -36,12 +34,18 @@ class UserService(user_pb2_grpc.UserServiceServicer):
         return user
 
     def GetUser(self, request, context):
+        # 方式1: abort() —— 直接抛出异常，后面的代码不执行
         if request.id <= 0:
             context.abort(grpc.StatusCode.INVALID_ARGUMENT,
                           f"ID 必须为正数: {request.id}")
+            # ↑ 这行之后的代码永远不会执行！
+
+        # 方式2: set_code() —— 设置错误码，但继续执行，必须手动 return
         if request.id not in self.db:
-            context.abort(grpc.StatusCode.NOT_FOUND,
-                          f"用户 {request.id} 不存在")
+            context.set_code(grpc.StatusCode.NOT_FOUND)
+            context.set_details(f"用户 {request.id} 不存在")
+            return user_pb2.UserResponse()  # ← 必须手动返回一个空消息
+
         return self.db[request.id]
 
     def ListUsers(self, request, context):
