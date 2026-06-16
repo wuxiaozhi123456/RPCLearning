@@ -16,9 +16,9 @@ try:
         user_pb2.CreateUserRequest(name="Alice", email="alice@e.com"),
         timeout=2.0
     )
-    print(f"✅ 成功: ID={r.id}")
+    print(f"[OK] 成功: ID={r.id}")
 except grpc.RpcError as e:
-    print(f"❌ {e.code().name}: {e.details()}")
+    print(f"[ERR] {e.code().name}: {e.details()}")
 
 # ----- 测试2: 名称为空 -> INVALID_ARGUMENT -----
 print("\n测试2: 名称为空")
@@ -28,7 +28,7 @@ try:
         timeout=2.0
     )
 except grpc.RpcError as e:
-    print(f"❌ {e.code().name}: {e.details()}")
+    print(f"[ERR] {e.code().name}: {e.details()}")
     # 根据错误类型做不同处理
     if e.code() == grpc.StatusCode.INVALID_ARGUMENT:
         print("   → 提示用户：名称不能为空")
@@ -41,7 +41,7 @@ try:
         timeout=2.0
     )
 except grpc.RpcError as e:
-    print(f"❌ {e.code().name}: {e.details()}")
+    print(f"[ERR] {e.code().name}: {e.details()}")
 
 # ----- 测试4: 重复邮箱 -> ALREADY_EXISTS -----
 print("\n测试4: 重复注册")
@@ -51,14 +51,14 @@ try:
         timeout=2.0
     )
 except grpc.RpcError as e:
-    print(f"❌ {e.code().name}: {e.details()}")
+    print(f"[ERR] {e.code().name}: {e.details()}")
 
 # ----- 测试5: 查询不存在的用户 -> NOT_FOUND -----
 print("\n测试5: 查询不存在的用户")
 try:
     stub.GetUser(user_pb2.GetUserRequest(id=999), timeout=2.0)
 except grpc.RpcError as e:
-    print(f"❌ {e.code().name}: {e.details()}")
+    print(f"[ERR] {e.code().name}: {e.details()}")
     if e.code() == grpc.StatusCode.NOT_FOUND:
         print("   → 返回 404 给前端")
 
@@ -67,7 +67,7 @@ print("\n测试6: 非法 ID（负数）")
 try:
     stub.GetUser(user_pb2.GetUserRequest(id=-1), timeout=2.0)
 except grpc.RpcError as e:
-    print(f"❌ {e.code().name}: {e.details()}")
+    print(f"[ERR] {e.code().name}: {e.details()}")
 
-print("\n👋 全部测试完成")
+print("\n--- 全部测试完成")
 channel.close()

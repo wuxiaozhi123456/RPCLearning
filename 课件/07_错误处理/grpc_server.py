@@ -80,7 +80,7 @@ def serve():
     user_pb2_grpc.add_UserServiceServicer_to_server(UserService(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
-    print("🚀 gRPC 服务已启动（带错误处理）: [::]:50051")
+    print(f"[gRPC] gRPC 服务已启动（带错误处理）: [::]:50051")
     server.wait_for_termination()
 
 if __name__ == '__main__':

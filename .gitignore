@@ -9,6 +9,7 @@ __pycache__/
 
 # 密钥（TLS 课生成）
 *.key
+nul
 
 # 虚拟环境
 venv/
