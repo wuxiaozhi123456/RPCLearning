@@ -8,12 +8,12 @@ BASE = "http://localhost:8000"
 with httpx.Client(base_url=BASE, timeout=2.0) as c:
     # 创建
     r = c.post("/users", json={"name": "Alice", "email": "alice@example.com"})
-    print(f"✅ Created: {r.json()}")
+    print(f"[OK] Created: {r.json()}")
 
     # 查询
     r = c.get("/users/1")
-    print(f"✅ Got: {r.json()}")
+    print(f"[OK] Got: {r.json()}")
 
     # 查不存在
     r = c.get("/users/999")
-    print(f"❌ Error: {r.status_code} - {r.text}")
+    print(f"[ERR] Error: {r.status_code} - {r.text}")

@@ -11,5 +11,5 @@ def add(a, b):
 server = SimpleXMLRPCServer(("localhost", 8000))
 server.register_function(say_hello)
 server.register_function(add)
-print("🚀 RPC 服务器启动: http://localhost:8000")
+print("[gRPC] RPC 服务器启动: http://localhost:8000")
 server.serve_forever()
