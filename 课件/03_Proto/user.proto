@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package user;
+
+// 定义服务（类似你的 Controller）
+service UserService {
+    rpc CreateUser (CreateUserRequest) returns (UserResponse);
+    rpc GetUser (GetUserRequest) returns (UserResponse);
+}
+
+// 定义请求/响应消息（类似你的 DTO / Pydantic 模型）
+message CreateUserRequest {
+    string name = 1;
+    string email = 2;
+}
+
+message GetUserRequest {
+    int32 id = 1;
+}
+
+message UserResponse {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+}

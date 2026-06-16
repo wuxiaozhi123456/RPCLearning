@@ -1,0 +1,19 @@
+# Proto 生成的代码（每次编译重新生成即可）
+*_pb2.py
+*_pb2_grpc.py
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+
+# 密钥（TLS 课生成）
+*.key
+
+# 虚拟环境
+venv/
+.venv/
+
+# IDE
+.vscode/
+.idea/
